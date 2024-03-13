@@ -1,28 +1,32 @@
 import random
 
 def monte_carlo_simulation(num_trials):
-    """
-    Perform Monte Carlo simulation of rolling two dice for a large number of trials.
-    Args:
-    - num_trials (int): The number of trials to perform.
-
-    Returns:
-    - probabilities (list): List of probabilities for each possible sum.
-    """
-    sums = [0] * 11  # Initialize list to store the frequency of each possible sum (2-12)
+    # Ініціалізуємо список для підрахунку кількості випадінь кожної суми
+    sums_count = [0] * 11
+    
+    # Виконуємо симуляцію
     for _ in range(num_trials):
+        # Кидаємо два кубики
         dice1 = random.randint(1, 6)
         dice2 = random.randint(1, 6)
-        total = dice1 + dice2
-        sums[total - 2] += 1  # Increment the frequency of the corresponding sum
-    probabilities = [count / num_trials * 100 for count in sums]  # Calculate probabilities in percentage
+        # Знаходимо суму чисел на кубиках і додаємо до списку sums_count
+        sums_count[dice1 + dice2 - 2] += 1
+    
+    # Розраховуємо імовірності для кожної суми
+    probabilities = [count / num_trials for count in sums_count]
+    
     return probabilities
 
-# Perform Monte Carlo simulation with a large number of trials
-num_trials = 1000000
+def print_probabilities(probabilities):
+    print("Сума\tІмовірність")
+    for i, prob in enumerate(probabilities, start=2):
+        print(f"{i}\t{prob:.2%} ({prob * 36:.0f}/36)")
+
+# Кількість спроб для симуляції
+num_trials = 100000
+
+# Виконуємо симуляцію методом Монте-Карло
 probabilities = monte_carlo_simulation(num_trials)
 
-# Print probabilities for each possible sum
-print("Sum\tProbability")
-for i, prob in enumerate(probabilities, start=2):
-    print(f"{i}\t{prob:.2f}% ({prob / 100 * num_trials}/{num_trials})")
+# Виводимо результати
+print_probabilities(probabilities)

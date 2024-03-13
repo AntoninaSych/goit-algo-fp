@@ -1,4 +1,6 @@
 import heapq
+import networkx as nx
+import matplotlib.pyplot as plt
 
 class Graph:
     def __init__(self):
@@ -55,7 +57,18 @@ graph.add_edge("D", "E", 1)
 distances = graph.dijkstra("A")
 print(distances)
 
+# Побудова графа для візуалізації
+G = nx.Graph()
+for vertex, edges in graph.vertices.items():
+    for edge in edges:
+        G.add_edge(vertex, edge[0], weight=edge[1])
 
-# У цьому коді ми спочатку створюємо клас Graph, який представляє граф. Ми використовуємо словник для збереження вершин та їхніх сусідів разом з вагами ребер. Метод dijkstra реалізує алгоритм Дейкстри, використовуючи бінарну купу для оптимізації вибору вершин. Він повертає словник з відстанями до кожної вершини від заданої початкової вершини.
+# Визначення позицій вершин для графа
+pos = nx.spring_layout(G)
 
-# Приклад використання додає вершини та ребра до графа, а потім викликає метод dijkstra для знаходження найкоротших шляхів від початкової вершини "A" до всіх інших вершин.
+# Візуалізація графа з найкоротшими шляхами
+plt.figure(figsize=(10, 6))
+nx.draw(G, pos, with_labels=True, node_size=2000, node_color="lightblue", font_size=12, font_weight="bold")
+nx.draw_networkx_edge_labels(G, pos, edge_labels={(u, v): f"{u}-{v} : {d['weight']}" for u, v, d in G.edges(data=True)})
+plt.title("Graph with Shortest Paths")
+plt.show()
